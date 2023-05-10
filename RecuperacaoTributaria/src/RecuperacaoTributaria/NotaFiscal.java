@@ -9,30 +9,39 @@ import org.w3c.dom.NodeList;
 
 public class NotaFiscal {
 	
-	String caminho = "C:\\Users\\01014185157\\Documents\\CCA_BR\\WorkSpaceCCA\\JavaCCA\\RecuperacaoTributaria\\nfe.xml";
+	String caminhoXml ="C:\\Users\\01014185157\\Documents\\CCA_BR\\WorkSpaceCCA\\JavaCCA\\RecuperacaoTributaria\\nfe.xml";
     
     public static void lerXml(String caminho) throws Exception {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(caminho);
-        doc.getDocumentElement().normalize();
+        DocumentBuilderFactory fabricaDocumento = DocumentBuilderFactory.newInstance();
+        DocumentBuilder construtorDocumento = fabricaDocumento.newDocumentBuilder();
+        Document documento = construtorDocumento.parse(caminho);
+        documento.getDocumentElement().normalize();
         
-        NodeList nodeList = doc.getElementsByTagName("nfeProc");
+        NodeList nodeList = documento.getElementsByTagName("nfeProc");
         Element element = (Element) nodeList.item(0);
         
-        String chave = element.getAttribute("chave");
-        System.out.println("Chave da nota fiscal: " + chave);
+        Element emitente = (Element) element.getElementsByTagName("emit").item(0);
+
+        Element cnpj = (Element) emitente.getElementsByTagName("CNPJ").item(0);
+        Element nome = (Element) emitente.getElementsByTagName("xNome").item(0);
+        
+        String cnpjValue = cnpj.getTextContent();
+        System.out.println("CNPJ do emitente: " + cnpjValue);
+        
+        String nomeValue = nome.getTextContent();
+        System.out.println("Nome do emitente: " + nomeValue);
         
         // Outras informações da nota fiscal podem ser obtidas aqui
     }
     
+    //LEITURA DE PDF AINDA A SER MODIFICADO
     public static void lerPdf(String caminho) throws Exception {
-        PdfReader reader = new PdfReader();
-        String text = PdfTextExtractor.getTextFromPage(reader, 1);
-        reader.close();
+        PdfReader leitorPdf = new PdfReader();
+        String textoPdf = PdfTextExtractor.getTextFromPage(leitorPdf, 1);
+        leitorPdf.close();
         
         System.out.println("Conteúdo do PDF:");
-        System.out.println(text);
+        System.out.println(textoPdf);
         
         // Informações da nota fiscal podem ser extraídas do texto do PDF
     }
